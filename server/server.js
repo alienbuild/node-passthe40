@@ -2,6 +2,7 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
+const { generateMessage } = require('./utils/message');
 
 // Grab the public folder
 const publicPath = path.join(__dirname, '../public');
@@ -19,16 +20,16 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
    console.log('New user connected');
 
-   // Emit events
-   socket.emit('newMessage', {
-      from: 'LK',
-      text: 'Sup dude.',
-      createdAt: new Date()
-   });
+   // Welcome new user
+   socket.emit('newMessage', generateMessage('PassThe40', 'Welcome to PassThe40.'));
+
+   // Announce new user
+   socket.broadcast.emit('newMessage', generateMessage('PassThe40', 'New user joined.'));
 
    // Create message event
    socket.on('createMessage', (message) => {
       console.log(message);
+      io.emit('newMessage', generateMessage(message.from, message.text));
    });
 
    // Disconnected

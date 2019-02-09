@@ -3,13 +3,6 @@ var socket = io();
 // On connect
 socket.on('connect', () => {
     console.log('Connected to the server.');
-
-    // Send message
-    socket.emit('createMessage', {
-        from: 'Sparker',
-        text: 'Hello server.'
-    });
-
 });
 
 // On disconnect
