@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import io from 'socket.io-client';
-import './App.css';
+import './assets/css/aliens.css';
 
 // Define socket
 const socket = io();
@@ -38,7 +38,7 @@ socket.on('coinFlip', (result) => {
 
     // Render messages
     const li = document.createElement('li');
-    li.className = "message-broadcast";
+    li.className = "message broadcast";
     const text = document.createTextNode(`${result.result}`);
     li.appendChild(text);
     messages.appendChild(li);
@@ -50,6 +50,7 @@ class App extends Component {
     state = {
         message: ''
     };
+
 
     handleChange = (e) => {
       console.log(e.target.value);
@@ -64,8 +65,11 @@ class App extends Component {
         socket.emit('createMessage',{
             from: 'User',
             text: this.state.message
-        }, function () {
-            console.log('good.');
+        }, () => {
+            // Clear the input value
+            let messageInput = document.querySelector('#message');
+            console.log(messageInput);
+            messageInput.value = '';
         });
     };
 
@@ -77,12 +81,27 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-          <ol id="messages"></ol>
-          <form onSubmit={this.handleSubmit}>
-              <input type="text" name="message" placeholder="message..." onChange={this.handleChange} />
-              <button type="submit">Send</button>
-          </form>
-          <button id="coin-flip" onClick={this.coinFlip}>Flip</button>
+          <aside>
+              <h3>Users</h3>
+          </aside>
+          <main>
+              <ol id="messages"></ol>
+              <footer>
+                  <form onSubmit={this.handleSubmit}>
+                      <input
+                          type="text"
+                          id="message"
+                          name="message"
+                          placeholder="message..."
+                          onChange={this.handleChange}
+                          autocomplete="off"
+                          autoFocus="on"
+                      />
+                      <button type="submit">Send</button>
+                  </form>
+                  <button id="coin-flip" onClick={this.coinFlip}>Flip</button>
+              </footer>
+          </main>
       </div>
     );
   }

@@ -30,12 +30,12 @@ io.on('connection', (socket) => {
    socket.on('createMessage', (message, callback) => {
       console.log(message);
       io.emit('newMessage', generateMessage(message.from, message.text));
-      callback('This is from the server.');
+      callback();
    });
 
    // Coin Flip
    socket.on('flip', () => {
-      socket.emit('coinFlip', { result: 'Coin has been flipped...' });
+      io.emit('coinFlip', { result: 'Coin has been flipped...' });
       setTimeout(() => {
          let result = '';
          x = (Math.floor(Math.random() * 2) == 0);
@@ -44,7 +44,7 @@ io.on('connection', (socket) => {
          } else {
              result = 'Tails';
          }
-         socket.emit('coinFlip', { result: `Coin landed on ${result}` });
+         io.emit('coinFlip', { result: `Coin landed on ${result}` });
       }, 1500);
    });
 
