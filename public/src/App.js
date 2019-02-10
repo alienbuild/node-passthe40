@@ -29,6 +29,21 @@ socket.on('newMessage', (message) => {
 
 });
 
+// Event: Coin Flip
+socket.on('coinFlip', (result) => {
+    console.log(result);
+
+    // Grab dialog box
+    const messages = document.querySelector('#messages');
+
+    // Render messages
+    const li = document.createElement('li');
+    li.className = "message-broadcast";
+    const text = document.createTextNode(`${result.result}`);
+    li.appendChild(text);
+    messages.appendChild(li);
+});
+
 
 class App extends Component {
 
@@ -54,6 +69,11 @@ class App extends Component {
         });
     };
 
+    coinFlip = (e) => {
+      e.preventDefault();
+      socket.emit('flip');
+    };
+
   render() {
     return (
       <div className="App">
@@ -62,6 +82,7 @@ class App extends Component {
               <input type="text" name="message" placeholder="message..." onChange={this.handleChange} />
               <button type="submit">Send</button>
           </form>
+          <button id="coin-flip" onClick={this.coinFlip}>Flip</button>
       </div>
     );
   }

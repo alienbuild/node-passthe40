@@ -33,12 +33,29 @@ io.on('connection', (socket) => {
       callback('This is from the server.');
    });
 
+   // Coin Flip
+   socket.on('flip', () => {
+      socket.emit('coinFlip', { result: 'Coin has been flipped...' });
+      setTimeout(() => {
+         let result = '';
+         x = (Math.floor(Math.random() * 2) == 0);
+         if (x) {
+             result = 'Heads';
+         } else {
+             result = 'Tails';
+         }
+         socket.emit('coinFlip', { result: `Coin landed on ${result}` });
+      }, 1500);
+   });
+
    // Disconnected
    socket.on('disconnect', () => {
       console.log('User has disconnected.');
    });
 
 });
+
+
 
 // Listen for requests
 server.listen(port, () => {
