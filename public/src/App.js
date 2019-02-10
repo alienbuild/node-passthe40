@@ -19,52 +19,25 @@ socket.on('disconnect', () => {
 
 // Event: New messages from the server
 socket.on('newMessage', (message) => {
-
-    var formattedTime = moment(message.createdAt).format('h:mm a');
-    console.log(formattedTime);
-
+    // Format the timestamp
+    const time = moment(message.createdAt).format('h:mm a');
     // Grab dialog box
     const messages = document.querySelector('#messages');
-
-    // ** Render messages **
-
-    // Create li element for data
-    const li = document.createElement('li');
-
-    // Create timestamp element
-    const timestamp = document.createElement('time');
-    const time = document.createTextNode(`${formattedTime}`);
-    timestamp.appendChild(time);
-
-    // Create message string
-    const text = document.createTextNode(`${message.from}: ${message.text}`);
-
-    // Append timestamp and text to new li element
-    li.appendChild(timestamp);
-    li.appendChild(text);
-
-    // Output
-    messages.appendChild(li);
+    // Set the template
+    const output = `<li><time>${time}</time> ${message.from}: ${message.text}</li>`;
+    // Output the message
+    messages.insertAdjacentHTML("beforeend", output);
 
 });
 
 // Event: Coin Flip
 socket.on('coinFlip', (result) => {
-
     // Grab dialog box
     const messages = document.querySelector('#messages');
-
-    // Render messages
-    // const li = document.createElement('li');
-    // li.className = "message broadcast";
-    // const text = document.createTextNode(`${result.result}`);
-
+    // Set the template
     const output = `<li class="message broadcast">${result.result}</li>`;
-
-    // Display output
-    //li.appendChild(text);
+    // Output the result
     messages.insertAdjacentHTML("beforeend", output);
-
 });
 
 
@@ -90,8 +63,7 @@ class App extends Component {
             text: this.state.message
         }, () => {
             // Clear the input value
-            let messageInput = document.querySelector('#message');
-            console.log(messageInput);
+            const messageInput = document.querySelector('#message');
             messageInput.value = '';
         });
     };
