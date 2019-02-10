@@ -17,6 +17,21 @@ socket.on('disconnect', () => {
     console.log('Disconnected from the server.');
 });
 
+// Autoscroll
+const autoscroll = () => {
+    // Selectors
+    const messages = document.querySelector('#messages');
+    const allowance = messages.lastChild;
+    // Heights
+    const clientHeight = messages.clientHeight;
+    const scrollTop = messages.scrollTop;
+    const scrollHeight = messages.scrollHeight;
+    // If the user is near the bottom, auto scroll to bottom.
+    if (clientHeight + scrollTop + allowance.clientHeight * 4 >= scrollHeight) {
+        messages.scrollTop = scrollHeight;
+    }
+};
+
 // Event: New messages from the server
 socket.on('newMessage', (message) => {
     // Format the timestamp
@@ -27,7 +42,8 @@ socket.on('newMessage', (message) => {
     const output = `<li><time>${time}</time> ${message.from}: ${message.text}</li>`;
     // Output the message
     messages.insertAdjacentHTML("beforeend", output);
-
+    // Autoscroll
+    autoscroll();
 });
 
 // Event: Coin Flip
@@ -47,7 +63,6 @@ class App extends Component {
         message: ''
     };
 
-
     handleChange = (e) => {
       console.log(e.target.value);
       this.setState({
@@ -57,14 +72,19 @@ class App extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
+        // Clear the input value
+        const messageInput = document.querySelector('#message');
+        messageInput.value = '';
+        // Clear the state
+        this.setState({
+            message: ''
+        });
         // Event: Send message
         socket.emit('createMessage',{
             from: 'User',
             text: this.state.message
         }, () => {
-            // Clear the input value
-            const messageInput = document.querySelector('#message');
-            messageInput.value = '';
+
         });
     };
 
@@ -89,7 +109,7 @@ class App extends Component {
                           name="message"
                           placeholder="message..."
                           onChange={this.handleChange}
-                          autocomplete="off"
+                          autoComplete="off"
                           autoFocus="on"
                       />
                       <button type="submit">Send</button>
