@@ -21,10 +21,10 @@ io.on('connection', (socket) => {
    console.log('New user connected');
 
    // Welcome new user
-   socket.emit('newMessage', generateMessage('PassThe40', 'Welcome to PassThe40.'));
+   socket.emit('newMessage', generateMessage('passthe40', 'Welcome to Pass the 40.'));
 
    // Announce new user
-   socket.broadcast.emit('newMessage', generateMessage('PassThe40', 'New user joined.'));
+   socket.broadcast.emit('newMessage', generateMessage('passthe40', 'New user joined.'));
 
    // Create message event
    socket.on('createMessage', (message, callback) => {
@@ -49,9 +49,9 @@ io.on('connection', (socket) => {
    });
 
    // Disconnected
-   socket.on('disconnect', () => {
-      console.log('User has disconnected.');
-   });
+   // socket.on('disconnect', () => {
+   //    console.log('User has disconnected.');
+   // });
 
 });
 

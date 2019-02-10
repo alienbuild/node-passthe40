@@ -61,6 +61,10 @@ h1, h2, h3, h4, h5, h6 {
       padding: 20px;
       height: 100%;
       overflow: auto; }
+      .App main #messages time {
+        margin-right: 5px;
+        color: #999;
+        font-size: 14px; }
   .App footer {
     background: #E6E8EC;
     position: absolute;
@@ -92,6 +96,8 @@ h1, h2, h3, h4, h5, h6 {
         color: #fff; }
 
 .message.broadcast {
-  color: red; }
+  color: red;
+  font-weight: bold;
+  font-style: italic; }
 
 /*# sourceMappingURL=aliens.css.map */

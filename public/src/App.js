@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import io from 'socket.io-client';
+import moment from 'moment';
+
 import './assets/css/aliens.css';
 
 // Define socket
@@ -18,30 +20,51 @@ socket.on('disconnect', () => {
 // Event: New messages from the server
 socket.on('newMessage', (message) => {
 
+    var formattedTime = moment(message.createdAt).format('h:mm a');
+    console.log(formattedTime);
+
     // Grab dialog box
     const messages = document.querySelector('#messages');
 
-    // Render messages
+    // ** Render messages **
+
+    // Create li element for data
     const li = document.createElement('li');
+
+    // Create timestamp element
+    const timestamp = document.createElement('time');
+    const time = document.createTextNode(`${formattedTime}`);
+    timestamp.appendChild(time);
+
+    // Create message string
     const text = document.createTextNode(`${message.from}: ${message.text}`);
+
+    // Append timestamp and text to new li element
+    li.appendChild(timestamp);
     li.appendChild(text);
+
+    // Output
     messages.appendChild(li);
 
 });
 
 // Event: Coin Flip
 socket.on('coinFlip', (result) => {
-    console.log(result);
 
     // Grab dialog box
     const messages = document.querySelector('#messages');
 
     // Render messages
-    const li = document.createElement('li');
-    li.className = "message broadcast";
-    const text = document.createTextNode(`${result.result}`);
-    li.appendChild(text);
-    messages.appendChild(li);
+    // const li = document.createElement('li');
+    // li.className = "message broadcast";
+    // const text = document.createTextNode(`${result.result}`);
+
+    const output = `<li class="message broadcast">${result.result}</li>`;
+
+    // Display output
+    //li.appendChild(text);
+    messages.insertAdjacentHTML("beforeend", output);
+
 });
 
 
