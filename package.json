@@ -4,18 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "client-install": "npm install --prefix public",
     "start": "node server/server.js",
+    "server": "nodemon server/server.js",
+    "client": "npm start --prefix public",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
     "test": "mocha server/**/*.test.js",
     "test-watch": "nodemon --exec 'npm test'"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "concurrently": "^4.1.0",
     "express": "^4.16.4",
     "socket.io": "^2.2.0"
   },
   "devDependencies": {
-    "jest": "^24.1.0",
     "mocha": "^5.2.0",
     "nodemon": "^1.18.10"
   }

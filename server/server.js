@@ -5,10 +5,10 @@ const socketIO = require('socket.io');
 const { generateMessage } = require('./utils/message');
 
 // Grab the public folder
-const publicPath = path.join(__dirname, '../public');
+const publicPath = path.join(__dirname, '../public/public');
 
 // Start the app and init socket io
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
@@ -27,9 +27,10 @@ io.on('connection', (socket) => {
    socket.broadcast.emit('newMessage', generateMessage('PassThe40', 'New user joined.'));
 
    // Create message event
-   socket.on('createMessage', (message) => {
+   socket.on('createMessage', (message, callback) => {
       console.log(message);
       io.emit('newMessage', generateMessage(message.from, message.text));
+      callback('This is from the server.');
    });
 
    // Disconnected
