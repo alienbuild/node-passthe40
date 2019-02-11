@@ -5,6 +5,11 @@ import io from 'socket.io-client';
 // Define socket
 const socket = io();
 
+// Put the socket into storage
+console.log(socket);
+//console.log(JSON.stringify(socket));
+//localStorage.setItem('socket', JSON.stringify(socket));
+
 class Login extends Component {
 
     state = {
