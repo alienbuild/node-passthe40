@@ -1,20 +1,42 @@
 const path = require('path');
 const http = require('http');
 const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const passport = require('passport');
 const socketIO = require('socket.io');
 const { generateMessage } = require('./utils/message');
+const users = require('./routes/api/users');
 
-// Grab the public folder
-const publicPath = path.join(__dirname, '../public/public');
-
-// Start the app and init socket io
-const port = process.env.PORT || 5000;
 const app = express();
+// Body parser middleware
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+
+// Server vars
+const port = process.env.PORT || 5000;
 const server = http.createServer(app);
 const io = socketIO(server);
+const publicPath = path.join(__dirname, '../public/public');
 
-// Server the public folder
+// Database
+const db = require('./config/keys').mongoURI;
+
+// Connect to MongoDB
+mongoose
+    .connect(db)
+    .then(() => console.log('MongoDB connected.'))
+    .catch( (err) => console.log('err'));
+
+// Passport middleware
+app.use(passport.initialize());
+
+// Passport config
+require('./config/passport')(passport);
+
+// Start the app and init socket io
 app.use(express.static(publicPath));
+app.use('/api/users', users);
 
 // New connection
 io.on('connection', (socket) => {
@@ -48,13 +70,12 @@ io.on('connection', (socket) => {
       }, 1500);
    });
 
-   // Disconnected
-   // socket.on('disconnect', () => {
-   //    console.log('User has disconnected.');
-   // });
+   //Disconnected
+   socket.on('disconnect', () => {
+      console.log('User has disconnected.');
+   });
 
 });
-
 
 
 // Listen for requests
