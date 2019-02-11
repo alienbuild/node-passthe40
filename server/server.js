@@ -42,11 +42,20 @@ app.use('/api/users', users);
 io.on('connection', (socket) => {
    console.log('New user connected');
 
-   // Welcome new user
-   socket.emit('newMessage', generateMessage('passthe40', 'Welcome to Pass the 40.'));
+   // Join
+   socket.on('join', (params, callback) => {
+      // REMINDER: Write validation!
+      socket.join(params.room);
+      console.log(`${params.user} joined ${params.room}`);
 
-   // Announce new user
-   socket.broadcast.emit('newMessage', generateMessage('passthe40', 'New user joined.'));
+      // Welcome user
+      socket.emit('newMessage', generateMessage('passthe40', 'Welcome to Pass the 40.'));
+
+      // Announce user
+      socket.broadcast.to(params.room).emit('newMessage', generateMessage('passthe40', `${params.user} has joined.`));
+
+      callback();
+   });
 
    // Create message event
    socket.on('createMessage', (message, callback) => {

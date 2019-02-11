@@ -2,13 +2,13 @@ import React, {Component} from 'react';
 import io from 'socket.io-client';
 import moment from 'moment';
 
-// Define socket
-const socket = io();
-
 class Chat extends Component {
 
     constructor(props){
         super(props);
+        // Define socket
+        const socket = io();
+
         // Autoscroll
         const autoscroll = () => {
             // Selectors
