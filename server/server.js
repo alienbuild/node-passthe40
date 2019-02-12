@@ -70,7 +70,12 @@ io.on('connection', (socket) => {
    // Create message event
    socket.on('createMessage', (message, callback) => {
       console.log(message);
-      io.emit('newMessage', generateMessage(message.from, message.text));
+      const user = users.getUser(socket.id);
+      // REMINDER: Add validation for empty messages and spam preventation.
+      // ie: if user and not string/empty
+      if (user) {
+         io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
+      }
       callback();
    });
 
@@ -88,7 +93,8 @@ io.on('connection', (socket) => {
 
    // Coin Flip
    socket.on('flip', () => {
-      io.emit('coinFlip', { result: 'Coin has been flipped...' });
+      const user = users.getUser(socket.id);
+      io.to(user.room).emit('coinFlip', { result: 'Coin has been flipped...' });
       setTimeout(() => {
          let result = '';
          x = (Math.floor(Math.random() * 2) == 0);
@@ -97,7 +103,7 @@ io.on('connection', (socket) => {
          } else {
             result = 'Tails';
          }
-         io.emit('coinFlip', { result: `Coin landed on ${result}` });
+         io.to(user.room).emit('coinFlip', { result: `Coin landed on ${result}` });
       }, 1500);
    });
 

@@ -80,7 +80,6 @@ class Chat extends Component {
         });
         // Event: Send message
         this.props.socket.emit('createMessage',{
-            from: 'User',
             text: this.state.message
         }, () => {
 
