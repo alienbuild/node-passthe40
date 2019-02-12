@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import moment from 'moment';
 import SocketContext from '../../context/socketContext';
 
+// Components
+import UserList from '../chat/UserList';
+
 class Chat extends Component {
 
     constructor(props){
@@ -21,6 +24,11 @@ class Chat extends Component {
                 messages.scrollTop = scrollHeight;
             }
         };
+
+        // Event: Disconnect
+        this.props.socket.on('disconnect', () => {
+            console.log('Disconnected from server.');
+        });
 
         // Event: New messages from the server
         this.props.socket.on('newMessage', (message) => {
@@ -88,9 +96,7 @@ class Chat extends Component {
     render() {
         return (
             <React.Fragment>
-                <aside>
-                    <h3>Users</h3>
-                </aside>
+                <UserList socket={this.props.socket}/>
                 <main>
                     <ol id="messages"></ol>
                     <footer>
