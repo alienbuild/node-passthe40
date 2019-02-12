@@ -99,7 +99,7 @@ class Chat extends Component {
                                 type="text"
                                 id="message"
                                 name="message"
-                                placeholder="message..."
+                                placeholder="Type a message..."
                                 onChange={this.handleChange}
                                 autoComplete="off"
                                 autoFocus="on"

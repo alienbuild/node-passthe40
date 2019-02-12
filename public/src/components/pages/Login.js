@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import { withRouter } from 'react-router-dom';
-import io from 'socket.io-client';
 import SocketContext from '../../context/socketContext';
 
 class Login extends Component {
@@ -66,4 +64,4 @@ const LoginWithSocket = props => (
     </SocketContext.Consumer>
 );
 
-export default LoginWithSocket; 
+export default LoginWithSocket;
