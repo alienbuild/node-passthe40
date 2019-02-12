@@ -1,16 +1,13 @@
 import React, {Component} from 'react';
 import { withRouter } from 'react-router-dom';
 import io from 'socket.io-client';
-
-// Define socket
-const socket = io();
-
-// Put the socket into storage
-console.log(socket);
-//console.log(JSON.stringify(socket));
-//localStorage.setItem('socket', JSON.stringify(socket));
+import SocketContext from '../../context/socketContext';
 
 class Login extends Component {
+
+    constructor(props){
+      super(props);
+    };
 
     state = {
       user: '',
@@ -35,7 +32,7 @@ class Login extends Component {
         e.preventDefault();
         const params = this.state;
         if (this.state.bool === true ) {
-            socket.emit('join', params, (err) => {
+            this.props.socket.emit('join', params, (err) => {
                 if (err) {
                     console.log(err);
                 } else {
@@ -46,8 +43,6 @@ class Login extends Component {
             console.log('Well the if statement worked ? :)');
         }
     };
-
-
 
     render() {
         return (
@@ -65,4 +60,10 @@ class Login extends Component {
     }
 }
 
-export default Login;
+const LoginWithSocket = props => (
+    <SocketContext.Consumer>
+        {socket => <Login {...props} socket={socket} />}
+    </SocketContext.Consumer>
+);
+
+export default LoginWithSocket; 

@@ -1,17 +1,12 @@
 import React, {Component} from 'react';
-import io from 'socket.io-client';
 import moment from 'moment';
-
-// Define socket
-const socket = io();
-
-// Retrieve the object from storage
-//const socket = localStorage.getItem("socket");
+import SocketContext from '../../context/socketContext';
 
 class Chat extends Component {
 
     constructor(props){
         super(props);
+
         // Autoscroll
         const autoscroll = () => {
             // Selectors
@@ -28,7 +23,7 @@ class Chat extends Component {
         };
 
         // Event: New messages from the server
-        socket.on('newMessage', (message) => {
+        this.props.socket.on('newMessage', (message) => {
             // Format the timestamp
             const time = moment(message.createdAt).format('h:mm a');
             // Grab dialog box
@@ -42,7 +37,7 @@ class Chat extends Component {
         });
 
         // Event: Coin Flip
-        socket.on('coinFlip', (result) => {
+        this.props.socket.on('coinFlip', (result) => {
             // Grab dialog box
             const messages = document.querySelector('#messages');
             // Set the template
@@ -76,7 +71,7 @@ class Chat extends Component {
             message: ''
         });
         // Event: Send message
-        socket.emit('createMessage',{
+        this.props.socket.emit('createMessage',{
             from: 'User',
             text: this.state.message
         }, () => {
@@ -87,7 +82,7 @@ class Chat extends Component {
     // Request coin flip
     coinFlip = (e) => {
         e.preventDefault();
-        socket.emit('flip');
+        this.props.socket.emit('flip');
     };
 
     render() {
@@ -119,4 +114,10 @@ class Chat extends Component {
     }
 }
 
-export default Chat;
+const ChatWithSocket = props => (
+    <SocketContext.Consumer>
+        {socket => <Chat {...props} socket={socket} />}
+    </SocketContext.Consumer>
+);
+
+export default ChatWithSocket;
